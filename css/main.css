@@ -52,6 +52,7 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
+    touch-action: manipulation;
 }
 
 .settings-btn:hover,
@@ -130,6 +131,7 @@ body {
     transition: all 0.2s ease;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     min-height: 80px;
+    touch-action: manipulation;
 }
 
 .number-btn:hover,
@@ -239,6 +241,7 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    touch-action: manipulation;
 }
 
 .action-btn.primary {
