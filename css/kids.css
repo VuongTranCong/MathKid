@@ -1,0 +1,578 @@
+/* MathKid Kid-Friendly UI Enhancements */
+
+/* Fun Animations and Visual Effects */
+@keyframes bounce {
+    0%, 20%, 60%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-15px);
+    }
+    80% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes wiggle {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(5deg); }
+    75% { transform: rotate(-5deg); }
+    100% { transform: rotate(0deg); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes rainbow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes celebrate {
+    0% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.1) rotate(-5deg); }
+    50% { transform: scale(1.2) rotate(5deg); }
+    75% { transform: scale(1.1) rotate(-2deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+/* Enhanced App Title */
+.app-title {
+    background: linear-gradient(-45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4, #FFEAA7, #DDA0DD);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: rainbow 3s ease infinite;
+    position: relative;
+}
+
+.app-title::before {
+    content: "✨";
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+.app-title::after {
+    content: "✨";
+    position: absolute;
+    right: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    animation: sparkle 2s ease-in-out infinite 1s;
+}
+
+/* Fun Problem Display Effects */
+.problem-display {
+    position: relative;
+    overflow: visible;
+}
+
+.problem-display::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: linear-gradient(-45deg,
+        rgba(255, 107, 107, 0.1),
+        rgba(78, 205, 196, 0.1),
+        rgba(69, 183, 209, 0.1),
+        rgba(150, 206, 180, 0.1)
+    );
+    border-radius: 25px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.problem-display:hover::before {
+    opacity: 1;
+}
+
+.number {
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.number:hover {
+    animation: wiggle 0.5s ease-in-out;
+}
+
+.operator {
+    font-size: 5rem !important;
+    background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.answer-box {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: visible;
+}
+
+.answer-box:not(:empty) {
+    background: linear-gradient(135deg, #e8f5e8, #c8e6c9) !important;
+    animation: bounce 0.6s ease;
+}
+
+.answer-box.typing {
+    animation: pulse 0.5s ease;
+}
+
+/* Enhanced Number Buttons */
+.number-btn {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+}
+
+.number-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s ease;
+}
+
+.number-btn:hover::before {
+    left: 100%;
+}
+
+.number-btn:hover {
+    background: linear-gradient(135deg, #4ECDC4, #45B7D1);
+    color: white !important;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4) !important;
+}
+
+.clear-btn {
+    background: linear-gradient(135deg, #FF9800, #FF5722) !important;
+    position: relative;
+}
+
+.clear-btn::after {
+    content: "🧹";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.clear-btn:hover::after {
+    opacity: 1;
+}
+
+.clear-btn:hover {
+    background: linear-gradient(135deg, #FF5722, #E64A19) !important;
+    animation: wiggle 0.3s ease;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, #4CAF50, #8BC34A) !important;
+    position: relative;
+}
+
+.submit-btn::after {
+    content: "🎯";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.submit-btn:hover::after {
+    opacity: 1;
+}
+
+.submit-btn:hover {
+    animation: celebrate 0.6s ease;
+    background: linear-gradient(135deg, #8BC34A, #CDDC39) !important;
+}
+
+/* Fun Feedback Messages */
+.feedback-message {
+    position: relative;
+    animation: slideInUp 0.5s ease;
+}
+
+.feedback-message.correct {
+    background: linear-gradient(135deg, #E8F5E8, #C8E6C9, #A5D6A7);
+    border: 3px solid #4CAF50;
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+    position: relative;
+    overflow: visible;
+}
+
+.feedback-message.correct::before {
+    content: "🎉";
+    position: absolute;
+    left: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: bounce 1s ease infinite;
+    font-size: 1.8rem;
+}
+
+.feedback-message.correct::after {
+    content: "⭐";
+    position: absolute;
+    right: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: sparkle 1.5s ease infinite;
+    font-size: 1.5rem;
+}
+
+.feedback-message.incorrect {
+    background: linear-gradient(135deg, #FFEBEE, #FFCDD2, #EF9A9A);
+    border: 3px solid #F44336;
+    box-shadow: 0 0 20px rgba(244, 67, 54, 0.2);
+    position: relative;
+}
+
+.feedback-message.incorrect::before {
+    content: "💪";
+    position: absolute;
+    left: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: pulse 1s ease infinite;
+    font-size: 1.5rem;
+}
+
+/* Progress Bar Enhancements */
+.progress-fill {
+    background: linear-gradient(90deg,
+        #FF6B6B 0%,
+        #4ECDC4 25%,
+        #45B7D1 50%,
+        #96CEB4 75%,
+        #FFEAA7 100%
+    );
+    background-size: 200% 100%;
+    animation: rainbow 3s ease infinite;
+    position: relative;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.progress-fill::after {
+    content: "🌟";
+    position: absolute;
+    right: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+    animation: sparkle 2s ease infinite;
+}
+
+/* Action Buttons Fun Effects */
+.action-btn.primary {
+    background: linear-gradient(135deg, #4CAF50, #8BC34A, #CDDC39);
+    background-size: 200% 200%;
+    animation: rainbow 4s ease infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-btn.primary::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.action-btn.primary:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+.action-btn.secondary {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    transition: all 0.3s ease;
+}
+
+.action-btn.secondary:hover {
+    background: linear-gradient(135deg, #dee2e6, #ced4da);
+    transform: translateY(-2px) scale(1.02);
+}
+
+/* Settings Button Fun */
+.settings-btn {
+    transition: all 0.3s ease;
+}
+
+.settings-btn:hover {
+    animation: wiggle 0.5s ease;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.5));
+}
+
+/* Fun Loading States */
+.loading {
+    position: relative;
+}
+
+.loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #4CAF50;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Celebration Effects */
+.celebration {
+    animation: celebrate 0.8s ease;
+}
+
+.celebration::before,
+.celebration::after {
+    content: "🎊";
+    position: absolute;
+    font-size: 2rem;
+    animation: sparkle 1s ease;
+    pointer-events: none;
+}
+
+.celebration::before {
+    top: -20px;
+    left: -20px;
+    animation-delay: 0.1s;
+}
+
+.celebration::after {
+    top: -20px;
+    right: -20px;
+    animation-delay: 0.3s;
+}
+
+/* Score Counter Animations */
+#correctCount,
+#totalCount {
+    transition: all 0.3s ease;
+}
+
+.score-update {
+    animation: bounce 0.5s ease;
+    color: #4CAF50 !important;
+    font-weight: 700 !important;
+}
+
+/* Streak Effects */
+.streak-effect {
+    position: relative;
+}
+
+.streak-effect::after {
+    content: "🔥";
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 1.2rem;
+    animation: bounce 1s ease infinite;
+}
+
+/* Touch-Friendly Enhancements */
+@media (max-width: 768px) {
+    .number-btn {
+        min-height: 70px;
+        font-size: 1.8rem;
+    }
+
+    .problem-display {
+        font-size: 3rem;
+        padding: 30px;
+    }
+
+    .feedback-message {
+        font-size: 1.3rem;
+        padding: 12px 25px;
+    }
+}
+
+/* Special Effects for Different Operations */
+.addition-mode .operator {
+    color: #4CAF50;
+    animation: pulse 2s ease infinite;
+}
+
+.subtraction-mode .operator {
+    color: #FF9800;
+    animation: wiggle 3s ease infinite;
+}
+
+.multiplication-mode .operator {
+    color: #9C27B0;
+    animation: celebrate 4s ease infinite;
+}
+
+/* Accessibility Enhancements */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .app-title::before,
+    .app-title::after {
+        animation: none;
+    }
+
+    .operator {
+        animation: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .number-btn {
+        border: 2px solid #000;
+        background: #fff;
+        color: #000;
+    }
+
+    .problem-display {
+        border: 3px solid #000;
+        background: #fff;
+    }
+
+    .feedback-message.correct {
+        background: #00ff00;
+        color: #000;
+        border-color: #000;
+    }
+
+    .feedback-message.incorrect {
+        background: #ff0000;
+        color: #fff;
+        border-color: #000;
+    }
+}
+
+/* Fun Cursor Effects (Desktop) */
+@media (min-width: 769px) {
+    .number-btn {
+        cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text y="28" font-size="28">👆</text></svg>'), pointer;
+    }
+
+    .action-btn {
+        cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text y="28" font-size="28">🎯</text></svg>'), pointer;
+    }
+
+    .settings-btn {
+        cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text y="28" font-size="28">⚙️</text></svg>'), pointer;
+    }
+}
+
+/* Seasonal/Theme Variations (Can be toggled via JS) */
+.theme-party .app-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+}
+
+.theme-party .number-btn:hover {
+    background: linear-gradient(135deg, #ff9a9e, #fecfef, #fecfef);
+}
+
+.theme-ocean .app-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #89f7fe 100%);
+}
+
+.theme-forest .app-container {
+    background: linear-gradient(135deg, #134e5e 0%, #71b280 100%);
+}
+
+/* Interactive Elements for Kids */
+.interactive-element {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.interactive-element:hover {
+    transform: scale(1.05);
+}
+
+.interactive-element::before {
+    content: "👋";
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    font-size: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.interactive-element:hover::before {
+    opacity: 1;
+    animation: bounce 1s ease infinite;
+}
+
+/* Sound effect indicators (visual) */
+.sound-effect {
+    position: relative;
+}
+
+.sound-effect::after {
+    content: "🔊";
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 0.8rem;
+    opacity: 0.7;
+    animation: pulse 2s ease infinite;
+}

@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathKid - Standalone Version</title>
+
+    <!-- Inline all CSS for standalone operation -->
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        .app-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .app-title {
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Game Area */
+        .game-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+        }
+
+        /* Problem Display */
+        .problem-section {
+            text-align: center;
+        }
+
+        .problem-display {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            font-size: 4rem;
+            font-weight: 700;
+            color: #333;
+            min-height: 120px;
+        }
+
+        .number, .operator, .equals {
+            color: #4CAF50;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .answer-box {
+            min-width: 100px;
+            padding: 10px 20px;
+            background: #f0f9f0;
+            border: 3px dashed #4CAF50;
+            border-radius: 15px;
+            color: #2E7D32;
+        }
+
+        /* Number Pad */
+        .input-section {
+            display: flex;
+            justify-content: center;
+        }
+
+        .number-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 300px;
+            width: 100%;
+        }
+
+        .number-btn {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            padding: 20px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            min-height: 80px;
+        }
+
+        .number-btn:hover,
+        .number-btn:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .clear-btn {
+            background: #FF9800;
+            color: white;
+        }
+
+        .submit-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        /* Feedback */
+        .feedback-section {
+            text-align: center;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feedback-message {
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 15px 30px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-message.correct {
+            background: #E8F5E8;
+            color: #2E7D32;
+            border: 2px solid #4CAF50;
+        }
+
+        .feedback-message.incorrect {
+            background: #FFEBEE;
+            color: #C62828;
+            border: 2px solid #F44336;
+        }
+
+        /* Progress */
+        .progress-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .progress-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        /* Make correct count MUCH bigger and prominent */
+        .score {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .score-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        #correctCount {
+            font-size: 4rem !important;
+            font-weight: 900 !important;
+            color: #4CAF50 !important;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 25px;
+            border-radius: 20px;
+            border: 3px solid #4CAF50;
+            min-width: 120px;
+            text-align: center;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        /* Animation for when correct count increases */
+        #correctCount.celebrating {
+            transform: scale(1.2);
+            background: rgba(76, 175, 80, 0.3);
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.6);
+        }
+
+        /* Make total problems smaller and less prominent */
+        .total {
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        #totalCount {
+            font-weight: 600;
+            color: #8BC34A;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            height: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 8px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            padding: 20px 0;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn.primary {
+            background: #4CAF50;
+            color: white;
+            box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
+        }
+
+        .action-btn.secondary {
+            background: rgba(255, 255, 255, 0.9);
+            color: #666;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .settings-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .settings-title {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .setting-group {
+            margin-bottom: 20px;
+        }
+
+        .setting-group label {
+            display: block;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .setting-group input[type="range"] {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .range-value {
+            color: #4CAF50;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .operation-checkboxes {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .operation-checkboxes label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            padding: 8px 12px;
+            background: #f5f5f5;
+            border-radius: 20px;
+            transition: background 0.3s;
+        }
+
+        .operation-checkboxes label:hover {
+            background: #e8f5e8;
+        }
+
+        .operation-checkboxes input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .settings-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .settings-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .problem-display {
+                font-size: 3rem;
+                padding: 30px;
+            }
+
+            .number-btn {
+                font-size: 1.8rem;
+                min-height: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1 class="app-title">🧮 MathKid (Offline)</h1>
+            <button id="settingsBtn" style="background: rgba(255,255,255,0.2); border: none; border-radius: 50%; width: 40px; height: 40px; color: white; cursor: pointer; margin-left: 20px;">⚙️</button>
+        </header>
+
+        <main class="game-area">
+            <section class="problem-section">
+                <div class="problem-display">
+                    <span id="firstNumber" class="number">5</span>
+                    <span id="operator" class="operator">+</span>
+                    <span id="secondNumber" class="number">3</span>
+                    <span class="equals">=</span>
+                    <span id="userAnswer" class="answer-box">?</span>
+                </div>
+            </section>
+
+            <section class="input-section">
+                <div class="number-pad">
+                    <button class="number-btn" data-number="1">1</button>
+                    <button class="number-btn" data-number="2">2</button>
+                    <button class="number-btn" data-number="3">3</button>
+                    <button class="number-btn" data-number="4">4</button>
+                    <button class="number-btn" data-number="5">5</button>
+                    <button class="number-btn" data-number="6">6</button>
+                    <button class="number-btn" data-number="7">7</button>
+                    <button class="number-btn" data-number="8">8</button>
+                    <button class="number-btn" data-number="9">9</button>
+                    <button class="number-btn clear-btn" data-action="clear">🔄</button>
+                    <button class="number-btn" data-number="0">0</button>
+                    <button class="number-btn submit-btn" data-action="submit">✓</button>
+                </div>
+            </section>
+
+            <section class="feedback-section">
+                <div id="feedback" class="feedback-message"></div>
+            </section>
+
+            <section class="progress-section">
+                <div class="progress-info">
+                    <div class="score">
+                        <span class="score-label">🏆 Correct Problems</span>
+                        <span id="correctCount">0</span>
+                    </div>
+                    <span class="total">Total Problems: <span id="totalCount">0</span></span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="action-buttons">
+            <button id="newProblemBtn" class="action-btn primary">New Problem</button>
+            <button id="resetProgressBtn" class="action-btn secondary">Reset Progress</button>
+        </footer>
+    </div>
+
+    <!-- Settings Panel -->
+    <div id="settingsPanel" class="settings-panel">
+        <div class="settings-content">
+            <h2 class="settings-title">⚙️ Math Settings</h2>
+
+            <div class="setting-group">
+                <label>Minimum Number: <span id="minValue" class="range-value">1</span></label>
+                <input type="range" id="minNumber" min="1" max="50" value="1">
+            </div>
+
+            <div class="setting-group">
+                <label>Maximum Number: <span id="maxValue" class="range-value">10</span></label>
+                <input type="range" id="maxNumber" min="2" max="100" value="10">
+            </div>
+
+            <div class="setting-group">
+                <label>Operations:</label>
+                <div class="operation-checkboxes">
+                    <label><input type="checkbox" id="additionOp" checked> ➕ Addition</label>
+                    <label><input type="checkbox" id="subtractionOp" checked> ➖ Subtraction</label>
+                    <label><input type="checkbox" id="multiplicationOp"> ✖️ Times</label>
+                </div>
+            </div>
+
+            <div class="settings-buttons">
+                <button class="settings-btn btn-secondary" onclick="closeSettings()">Cancel</button>
+                <button class="settings-btn btn-primary" onclick="saveSettings()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- All JavaScript inline for standalone operation -->
+    <script>
+        // Simple Math Engine
+        const MathEngine = {
+            settings: {
+                minNumber: 1,
+                maxNumber: 10,
+                operations: ['addition', 'subtraction']
+            },
+
+            generateProblem() {
+                const { minNumber, maxNumber, operations } = this.settings;
+                const operation = operations[Math.floor(Math.random() * operations.length)];
+
+                let num1, num2, operator, answer;
+
+                switch (operation) {
+                    case 'addition':
+                        num1 = this.randomNumber(minNumber, maxNumber);
+                        num2 = this.randomNumber(minNumber, maxNumber);
+                        operator = '+';
+                        answer = num1 + num2;
+                        break;
+                    case 'subtraction':
+                        num1 = this.randomNumber(minNumber, maxNumber);
+                        num2 = this.randomNumber(minNumber, Math.min(num1, maxNumber));
+                        operator = '-';
+                        answer = num1 - num2;
+                        break;
+                    case 'multiplication':
+                        num1 = this.randomNumber(Math.max(minNumber, 1), Math.min(maxNumber, 12));
+                        num2 = this.randomNumber(Math.max(minNumber, 1), Math.min(maxNumber, 12));
+                        operator = '×';
+                        answer = num1 * num2;
+                        break;
+                    default:
+                        return this.generateProblem();
+                }
+
+                return { num1, num2, operator, answer };
+            },
+
+            randomNumber(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            },
+
+            validateAnswer(problem, userAnswer) {
+                return parseInt(userAnswer) === problem.answer;
+            }
+        };
+
+        // Simple Storage using localStorage
+        const Storage = {
+            get(key) {
+                try {
+                    const item = localStorage.getItem(`mathkid_${key}`);
+                    return item ? JSON.parse(item) : null;
+                } catch {
+                    return null;
+                }
+            },
+
+            set(key, value) {
+                try {
+                    localStorage.setItem(`mathkid_${key}`, JSON.stringify(value));
+                    return true;
+                } catch {
+                    return false;
+                }
+            },
+
+            getStats() {
+                return this.get('stats') || { correct: 0, total: 0 };
+            },
+
+            saveStats(stats) {
+                this.set('stats', stats);
+            }
+        };
+
+        // App Logic
+        class MathKidApp {
+            constructor() {
+                this.currentProblem = null;
+                this.userAnswer = '';
+                this.stats = Storage.getStats();
+
+                this.encouragementMessages = {
+                    correct: ['🎉 Amazing!', '⭐ Great job!', '🏆 Fantastic!', '🎯 Perfect!', '🌟 Brilliant!', '👏 Awesome!', '🚀 Super!', '💯 Excellent!'],
+                    incorrect: ['🤔 Think again!', '💪 You can do it!', '🎯 Try once more!', '⭐ Keep trying!', '🧠 Use your brain!', '💡 Think it through!', '🔄 Give it another try!', '🌟 Don\'t give up!']
+                };
+
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.generateNewProblem();
+                this.updateProgressDisplay();
+            }
+
+            setupEventListeners() {
+                // Number pad
+                document.querySelectorAll('.number-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => this.handleNumberPadClick(e));
+                });
+
+                // Action buttons
+                document.getElementById('newProblemBtn').addEventListener('click', () => {
+                    this.generateNewProblem();
+                });
+
+                document.getElementById('resetProgressBtn').addEventListener('click', () => {
+                    if (confirm('Reset all progress?')) {
+                        this.stats = { correct: 0, total: 0 };
+                        Storage.saveStats(this.stats);
+                        this.updateProgressDisplay();
+                        this.generateNewProblem();
+                    }
+                });
+
+                // Settings
+                document.getElementById('settingsBtn').addEventListener('click', () => {
+                    this.openSettings();
+                });
+
+                // Settings controls
+                document.getElementById('minNumber').addEventListener('input', (e) => {
+                    document.getElementById('minValue').textContent = e.target.value;
+                    const maxInput = document.getElementById('maxNumber');
+                    if (parseInt(maxInput.value) <= parseInt(e.target.value)) {
+                        maxInput.value = parseInt(e.target.value) + 1;
+                        document.getElementById('maxValue').textContent = maxInput.value;
+                    }
+                });
+
+                document.getElementById('maxNumber').addEventListener('input', (e) => {
+                    document.getElementById('maxValue').textContent = e.target.value;
+                });
+
+                // Keyboard support
+                document.addEventListener('keydown', (e) => {
+                    if (e.key >= '0' && e.key <= '9') {
+                        this.addDigit(e.key);
+                    } else if (e.key === 'Backspace') {
+                        this.clearAnswer();
+                    } else if (e.key === 'Enter') {
+                        this.submitAnswer();
+                    }
+                });
+            }
+
+            handleNumberPadClick(e) {
+                const btn = e.target;
+                const number = btn.dataset.number;
+                const action = btn.dataset.action;
+
+                if (number !== undefined) {
+                    this.addDigit(number);
+                } else if (action === 'clear') {
+                    this.clearAnswer();
+                } else if (action === 'submit') {
+                    this.submitAnswer();
+                }
+            }
+
+            addDigit(digit) {
+                if (this.userAnswer.length < 4) {
+                    this.userAnswer += digit;
+                    this.updateAnswerDisplay();
+                }
+            }
+
+            clearAnswer() {
+                this.userAnswer = '';
+                this.updateAnswerDisplay();
+                this.clearFeedback();
+            }
+
+            updateAnswerDisplay() {
+                document.getElementById('userAnswer').textContent = this.userAnswer || '?';
+            }
+
+            submitAnswer() {
+                if (!this.userAnswer) return;
+
+                const correct = MathEngine.validateAnswer(this.currentProblem, this.userAnswer);
+                this.stats.total++;
+
+                if (correct) {
+                    this.stats.correct++;
+                    this.handleCorrectAnswer();
+                } else {
+                    this.handleIncorrectAnswer();
+                }
+
+                Storage.saveStats(this.stats);
+                this.updateProgressDisplay();
+            }
+
+            handleCorrectAnswer() {
+                const message = this.encouragementMessages.correct[
+                    Math.floor(Math.random() * this.encouragementMessages.correct.length)
+                ];
+                this.showFeedback(message, 'correct');
+
+                setTimeout(() => {
+                    this.generateNewProblem();
+                }, 2000);
+            }
+
+            handleIncorrectAnswer() {
+                const message = this.encouragementMessages.incorrect[
+                    Math.floor(Math.random() * this.encouragementMessages.incorrect.length)
+                ];
+                this.showFeedback(message, 'incorrect');
+
+                setTimeout(() => {
+                    this.clearAnswer();
+                }, 3000);
+            }
+
+            showFeedback(message, type) {
+                const feedbackEl = document.getElementById('feedback');
+                feedbackEl.textContent = message;
+                feedbackEl.className = `feedback-message ${type}`;
+            }
+
+            clearFeedback() {
+                const feedbackEl = document.getElementById('feedback');
+                feedbackEl.className = 'feedback-message';
+                feedbackEl.textContent = '';
+            }
+
+            generateNewProblem() {
+                this.currentProblem = MathEngine.generateProblem();
+                this.displayProblem();
+                this.clearAnswer();
+                this.clearFeedback();
+            }
+
+            displayProblem() {
+                if (!this.currentProblem) return;
+
+                document.getElementById('firstNumber').textContent = this.currentProblem.num1;
+                document.getElementById('operator').textContent = this.currentProblem.operator;
+                document.getElementById('secondNumber').textContent = this.currentProblem.num2;
+            }
+
+            updateProgressDisplay() {
+                const correctCountEl = document.getElementById('correctCount');
+                const oldCount = parseInt(correctCountEl.textContent) || 0;
+                const newCount = this.stats.correct;
+
+                // Update the count
+                correctCountEl.textContent = newCount;
+                document.getElementById('totalCount').textContent = this.stats.total;
+
+                // Animate if count increased
+                if (newCount > oldCount) {
+                    correctCountEl.classList.add('celebrating');
+                    setTimeout(() => {
+                        correctCountEl.classList.remove('celebrating');
+                    }, 500);
+                }
+
+                const progressPercent = this.stats.total > 0 ?
+                    (this.stats.correct / this.stats.total) * 100 : 0;
+                document.getElementById('progressFill').style.width = `${progressPercent}%`;
+            }
+
+            openSettings() {
+                // Update settings UI with current values
+                document.getElementById('minNumber').value = MathEngine.settings.minNumber;
+                document.getElementById('maxNumber').value = MathEngine.settings.maxNumber;
+                document.getElementById('minValue').textContent = MathEngine.settings.minNumber;
+                document.getElementById('maxValue').textContent = MathEngine.settings.maxNumber;
+
+                document.getElementById('additionOp').checked = MathEngine.settings.operations.includes('addition');
+                document.getElementById('subtractionOp').checked = MathEngine.settings.operations.includes('subtraction');
+                document.getElementById('multiplicationOp').checked = MathEngine.settings.operations.includes('multiplication');
+
+                document.getElementById('settingsPanel').style.display = 'flex';
+            }
+        }
+
+        // Settings functions
+        function closeSettings() {
+            document.getElementById('settingsPanel').style.display = 'none';
+        }
+
+        function saveSettings() {
+            const minNumber = parseInt(document.getElementById('minNumber').value);
+            const maxNumber = parseInt(document.getElementById('maxNumber').value);
+
+            const operations = [];
+            if (document.getElementById('additionOp').checked) operations.push('addition');
+            if (document.getElementById('subtractionOp').checked) operations.push('subtraction');
+            if (document.getElementById('multiplicationOp').checked) operations.push('multiplication');
+
+            if (operations.length === 0) {
+                alert('Please select at least one operation!');
+                return;
+            }
+
+            if (minNumber >= maxNumber) {
+                alert('Maximum number must be greater than minimum number!');
+                return;
+            }
+
+            MathEngine.settings = { minNumber, maxNumber, operations };
+            closeSettings();
+
+            // Generate new problem with new settings
+            if (window.mathApp) {
+                window.mathApp.generateNewProblem();
+            }
+
+            alert('Settings saved! 🎯');
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            window.mathApp = new MathKidApp();
+        });
+
+        // Prevent zoom on double tap
+        document.addEventListener('touchend', (e) => {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>

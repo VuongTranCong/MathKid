@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathKid Settings - Parent Panel</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Parent settings for MathKid math learning app">
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/settings.css">
+</head>
+<body>
+    <div class="settings-container">
+        <!-- Header -->
+        <header class="settings-header">
+            <button id="backBtn" class="back-btn" aria-label="Back to game">
+                ← Back to Game
+            </button>
+            <h1 class="settings-title">⚙️ Parent Settings</h1>
+            <button id="resetAllBtn" class="reset-btn" aria-label="Reset all settings">
+                🔄 Reset All
+            </button>
+        </header>
+
+        <!-- Settings Form -->
+        <main class="settings-content">
+            <form id="settingsForm" class="settings-form">
+
+                <!-- Number Range Section -->
+                <section class="setting-section">
+                    <h2 class="section-title">📊 Number Range</h2>
+                    <p class="section-description">Set the minimum and maximum numbers for math problems</p>
+
+                    <div class="range-controls">
+                        <div class="range-group">
+                            <label for="minNumber">Minimum Number</label>
+                            <div class="input-group">
+                                <input type="range" id="minNumberRange" min="0" max="50" value="1" class="range-slider">
+                                <input type="number" id="minNumber" min="0" max="50" value="1" class="number-input">
+                            </div>
+                            <span class="range-display" id="minNumberDisplay">1</span>
+                        </div>
+
+                        <div class="range-group">
+                            <label for="maxNumber">Maximum Number</label>
+                            <div class="input-group">
+                                <input type="range" id="maxNumberRange" min="2" max="100" value="10" class="range-slider">
+                                <input type="number" id="maxNumber" min="2" max="100" value="10" class="number-input">
+                            </div>
+                            <span class="range-display" id="maxNumberDisplay">10</span>
+                        </div>
+                    </div>
+
+                    <div class="preview-section">
+                        <p class="preview-label">Example problems:</p>
+                        <div id="previewProblems" class="preview-problems">
+                            <span class="preview-problem">5 + 3 = 8</span>
+                            <span class="preview-problem">7 - 2 = 5</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Operations Section -->
+                <section class="setting-section">
+                    <h2 class="section-title">➕➖ Operations</h2>
+                    <p class="section-description">Choose which math operations to include</p>
+
+                    <div class="operations-grid">
+                        <label class="operation-option">
+                            <input type="checkbox" name="operations" value="addition" id="additionOp">
+                            <div class="operation-card">
+                                <span class="operation-icon">➕</span>
+                                <span class="operation-name">Addition</span>
+                                <span class="operation-example">5 + 3 = 8</span>
+                            </div>
+                        </label>
+
+                        <label class="operation-option">
+                            <input type="checkbox" name="operations" value="subtraction" id="subtractionOp">
+                            <div class="operation-card">
+                                <span class="operation-icon">➖</span>
+                                <span class="operation-name">Subtraction</span>
+                                <span class="operation-example">8 - 3 = 5</span>
+                            </div>
+                        </label>
+
+                        <label class="operation-option">
+                            <input type="checkbox" name="operations" value="multiplication" id="multiplicationOp">
+                            <div class="operation-card">
+                                <span class="operation-icon">✖️</span>
+                                <span class="operation-name">Multiplication</span>
+                                <span class="operation-example">4 × 3 = 12</span>
+                            </div>
+                        </label>
+
+                        <label class="operation-option">
+                            <input type="checkbox" name="operations" value="mixed" id="mixedOp">
+                            <div class="operation-card">
+                                <span class="operation-icon">🔀</span>
+                                <span class="operation-name">Mixed</span>
+                                <span class="operation-example">Random</span>
+                            </div>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- Difficulty Level Section -->
+                <section class="setting-section">
+                    <h2 class="section-title">🎯 Difficulty Level</h2>
+                    <p class="section-description">Adjust the challenge level for your child</p>
+
+                    <div class="difficulty-options">
+                        <label class="difficulty-option">
+                            <input type="radio" name="difficulty" value="easy" id="easyDifficulty">
+                            <div class="difficulty-card easy">
+                                <span class="difficulty-icon">🟢</span>
+                                <span class="difficulty-name">Easy</span>
+                                <span class="difficulty-desc">Simple single-digit problems</span>
+                            </div>
+                        </label>
+
+                        <label class="difficulty-option">
+                            <input type="radio" name="difficulty" value="medium" id="mediumDifficulty">
+                            <div class="difficulty-card medium">
+                                <span class="difficulty-icon">🟡</span>
+                                <span class="difficulty-name">Medium</span>
+                                <span class="difficulty-desc">Mix of operations and larger numbers</span>
+                            </div>
+                        </label>
+
+                        <label class="difficulty-option">
+                            <input type="radio" name="difficulty" value="hard" id="hardDifficulty">
+                            <div class="difficulty-card hard">
+                                <span class="difficulty-icon">🔴</span>
+                                <span class="difficulty-name">Hard</span>
+                                <span class="difficulty-desc">Advanced problems with multiplication</span>
+                            </div>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- Session Settings Section -->
+                <section class="setting-section">
+                    <h2 class="section-title">⏰ Session Settings</h2>
+                    <p class="section-description">Optional limits for practice sessions</p>
+
+                    <div class="session-controls">
+                        <label class="session-option">
+                            <input type="radio" name="sessionType" value="unlimited" id="unlimitedSession">
+                            <div class="session-card">
+                                <span class="session-icon">♾️</span>
+                                <span class="session-name">Unlimited</span>
+                                <span class="session-desc">Practice as long as desired</span>
+                            </div>
+                        </label>
+
+                        <label class="session-option">
+                            <input type="radio" name="sessionType" value="limited" id="limitedSession">
+                            <div class="session-card">
+                                <span class="session-icon">🎯</span>
+                                <span class="session-name">Set Limit</span>
+                                <span class="session-desc">Stop after specific number of problems</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="session-length-control" id="sessionLengthControl" style="display: none;">
+                        <label for="sessionLength">Number of problems:</label>
+                        <input type="range" id="sessionLengthRange" min="5" max="50" value="10" class="range-slider">
+                        <input type="number" id="sessionLength" min="5" max="50" value="10" class="number-input">
+                        <span class="range-display" id="sessionLengthDisplay">10</span>
+                    </div>
+                </section>
+
+                <!-- Progress Management Section -->
+                <section class="setting-section">
+                    <h2 class="section-title">📈 Progress Management</h2>
+                    <p class="section-description">View and manage learning progress</p>
+
+                    <div class="progress-stats" id="progressStats">
+                        <div class="stat-card">
+                            <span class="stat-value" id="totalProblems">0</span>
+                            <span class="stat-label">Total Problems</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="correctAnswers">0</span>
+                            <span class="stat-label">Correct Answers</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="accuracy">0%</span>
+                            <span class="stat-label">Accuracy</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="bestStreak">0</span>
+                            <span class="stat-label">Best Streak</span>
+                        </div>
+                    </div>
+
+                    <div class="progress-actions">
+                        <button type="button" id="exportDataBtn" class="action-btn secondary">
+                            💾 Export Data
+                        </button>
+                        <button type="button" id="resetProgressBtn" class="action-btn danger">
+                            🗑️ Reset Progress
+                        </button>
+                    </div>
+                </section>
+
+            </form>
+        </main>
+
+        <!-- Action Buttons -->
+        <footer class="settings-footer">
+            <button type="button" id="cancelBtn" class="footer-btn secondary">
+                Cancel
+            </button>
+            <button type="submit" form="settingsForm" id="saveBtn" class="footer-btn primary">
+                Save Settings
+            </button>
+        </footer>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="confirmTitle">Confirm Action</h3>
+            <p id="confirmMessage">Are you sure you want to proceed?</p>
+            <div class="modal-buttons">
+                <button id="confirmCancel" class="btn-secondary">Cancel</button>
+                <button id="confirmOk" class="btn-primary">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="successMessage" class="success-toast hidden">
+        <span id="successText">Settings saved successfully!</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/storage.js"></script>
+    <script src="js/math-engine.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+</html>

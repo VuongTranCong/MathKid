@@ -1,0 +1,33 @@
+# MathKid .gitignore
+
+# Development files
+.DS_Store
+.vscode/
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Cache files
+.cache/
+
+# Node modules (if using build tools)
+node_modules/
+
+# Environment files
+.env
+.env.local
+
+# Build outputs (if using build process)
+dist/
+build/
+
+# IDE files
+*.swp
+*.swo
+*~
+
+# OS generated files
+Thumbs.db
+ehthumbs.db

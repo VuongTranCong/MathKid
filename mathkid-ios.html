@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>MathKid - iPad Version</title>
+
+    <style>
+        /* Disable text selection and enable touch */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            touch-action: manipulation;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 20px;
+            touch-action: manipulation;
+        }
+
+        /* Header */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .app-title {
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .settings-icon {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+            touch-action: manipulation;
+            -webkit-appearance: none;
+            outline: none;
+        }
+
+        /* Game Area */
+        .game-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+        }
+
+        /* Problem Display */
+        .problem-display {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            font-size: 4rem;
+            font-weight: 700;
+            color: #333;
+            min-height: 120px;
+            text-align: center;
+        }
+
+        .number, .operator, .equals {
+            color: #4CAF50;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .answer-box {
+            min-width: 100px;
+            padding: 10px 20px;
+            background: #f0f9f0;
+            border: 3px dashed #4CAF50;
+            border-radius: 15px;
+            color: #2E7D32;
+            font-weight: 700;
+        }
+
+        /* Number Pad - Enhanced for iOS */
+        .number-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 350px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .number-btn {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            padding: 25px;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #333;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            /* iOS specific touch handling */
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+            touch-action: manipulation;
+            user-select: none;
+            outline: none;
+        }
+
+        .number-btn:active {
+            background: #f0f0f0;
+            transform: scale(0.95);
+        }
+
+        .clear-btn {
+            background: #FF9800 !important;
+            color: white !important;
+        }
+
+        .submit-btn {
+            background: #4CAF50 !important;
+            color: white !important;
+        }
+
+        .clear-btn:active {
+            background: #F57C00 !important;
+        }
+
+        .submit-btn:active {
+            background: #388E3C !important;
+        }
+
+        /* Feedback */
+        .feedback-section {
+            text-align: center;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feedback-message {
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 15px 30px;
+            border-radius: 25px;
+        }
+
+        .feedback-message.correct {
+            background: #E8F5E8;
+            color: #2E7D32;
+            border: 2px solid #4CAF50;
+        }
+
+        .feedback-message.incorrect {
+            background: #FFEBEE;
+            color: #C62828;
+            border: 2px solid #F44336;
+        }
+
+        /* Progress */
+        .progress-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .progress-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        /* Make correct count MUCH bigger and prominent */
+        .score {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .score-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        #correctCount {
+            font-size: 4rem !important;
+            font-weight: 900 !important;
+            color: #4CAF50 !important;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 25px;
+            border-radius: 20px;
+            border: 3px solid #4CAF50;
+            min-width: 120px;
+            text-align: center;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        /* Animation for when correct count increases */
+        #correctCount.celebrating {
+            transform: scale(1.2);
+            background: rgba(76, 175, 80, 0.3);
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.6);
+        }
+
+        /* Make total problems smaller and less prominent */
+        .total {
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        #totalCount {
+            font-weight: 600;
+            color: #8BC34A;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            height: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 8px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            padding: 20px 0;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 18px 30px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 60px;
+
+            /* iOS touch handling */
+            -webkit-appearance: none;
+            touch-action: manipulation;
+            user-select: none;
+            outline: none;
+        }
+
+        .action-btn.primary {
+            background: #4CAF50;
+            color: white;
+            box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
+        }
+
+        .action-btn.secondary {
+            background: rgba(255, 255, 255, 0.9);
+            color: #666;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Settings Modal */
+        .settings-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            touch-action: manipulation;
+        }
+
+        .settings-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 450px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .settings-title {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        .setting-group {
+            margin-bottom: 25px;
+        }
+
+        .setting-label {
+            display: block;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .range-input {
+            width: 100%;
+            height: 40px;
+            margin-bottom: 10px;
+            -webkit-appearance: none;
+            background: #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .range-input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+        .range-value {
+            color: #4CAF50;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .operation-checkboxes {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .checkbox-option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin: 0;
+        }
+
+        .checkbox-option:active {
+            background: #e9ecef;
+        }
+
+        .settings-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .settings-btn {
+            flex: 1;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1.1rem;
+            min-height: 50px;
+
+            -webkit-appearance: none;
+            touch-action: manipulation;
+            outline: none;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .settings-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* iPad specific adjustments */
+        @media screen and (min-width: 768px) {
+            .problem-display {
+                font-size: 4.5rem;
+                padding: 50px;
+            }
+
+            .number-btn {
+                min-height: 100px;
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Status indicator */
+        .status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 255, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="status">iPad Ready ✅</div>
+
+    <div class="app-container">
+        <header class="app-header">
+            <h1 class="app-title">🧮 MathKid</h1>
+            <button class="settings-icon" id="settingsBtn">⚙️</button>
+        </header>
+
+        <main class="game-area">
+            <section class="problem-section">
+                <div class="problem-display">
+                    <span id="firstNumber" class="number">5</span>
+                    <span id="operator" class="operator">+</span>
+                    <span id="secondNumber" class="number">3</span>
+                    <span class="equals">=</span>
+                    <span id="userAnswer" class="answer-box">?</span>
+                </div>
+            </section>
+
+            <section class="input-section">
+                <div class="number-pad">
+                    <button class="number-btn" data-number="1">1</button>
+                    <button class="number-btn" data-number="2">2</button>
+                    <button class="number-btn" data-number="3">3</button>
+                    <button class="number-btn" data-number="4">4</button>
+                    <button class="number-btn" data-number="5">5</button>
+                    <button class="number-btn" data-number="6">6</button>
+                    <button class="number-btn" data-number="7">7</button>
+                    <button class="number-btn" data-number="8">8</button>
+                    <button class="number-btn" data-number="9">9</button>
+                    <button class="number-btn clear-btn" data-action="clear">🔄</button>
+                    <button class="number-btn" data-number="0">0</button>
+                    <button class="number-btn submit-btn" data-action="submit">✓</button>
+                </div>
+            </section>
+
+            <section class="feedback-section">
+                <div id="feedback" class="feedback-message"></div>
+            </section>
+
+            <section class="progress-section">
+                <div class="progress-info">
+                    <div class="score">
+                        <span class="score-label">🏆 Correct Problems</span>
+                        <span id="correctCount">0</span>
+                    </div>
+                    <span class="total">Total Problems: <span id="totalCount">0</span></span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="action-buttons">
+            <button id="newProblemBtn" class="action-btn primary">New Problem</button>
+            <button id="resetProgressBtn" class="action-btn secondary">Reset Progress</button>
+        </footer>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="settings-modal">
+        <div class="settings-content">
+            <h2 class="settings-title">⚙️ Math Settings</h2>
+
+            <div class="setting-group">
+                <label class="setting-label">Minimum Number: <span id="minValue" class="range-value">1</span></label>
+                <input type="range" class="range-input" id="minNumber" min="1" max="50" value="1">
+            </div>
+
+            <div class="setting-group">
+                <label class="setting-label">Maximum Number: <span id="maxValue" class="range-value">10</span></label>
+                <input type="range" class="range-input" id="maxNumber" min="2" max="100" value="10">
+            </div>
+
+            <div class="setting-group">
+                <label class="setting-label">Operations:</label>
+                <div class="operation-checkboxes">
+                    <label class="checkbox-option">
+                        <input type="checkbox" id="additionOp" checked>
+                        <span>➕ Addition (5 + 3)</span>
+                    </label>
+                    <label class="checkbox-option">
+                        <input type="checkbox" id="subtractionOp" checked>
+                        <span>➖ Subtraction (8 - 3)</span>
+                    </label>
+                    <label class="checkbox-option">
+                        <input type="checkbox" id="multiplicationOp">
+                        <span>✖️ Multiplication (4 × 3)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-buttons">
+                <button class="settings-btn btn-secondary" id="cancelBtn">Cancel</button>
+                <button class="settings-btn btn-primary" id="saveBtn">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced for iOS touch handling
+        class MathKidApp {
+            constructor() {
+                this.currentProblem = null;
+                this.userAnswer = '';
+                this.stats = this.loadStats();
+                this.settings = {
+                    minNumber: 1,
+                    maxNumber: 10,
+                    operations: ['addition', 'subtraction']
+                };
+
+                this.encouragementMessages = {
+                    correct: ['🎉 Amazing!', '⭐ Great job!', '🏆 Fantastic!', '🎯 Perfect!', '🌟 Brilliant!', '👏 Awesome!', '🚀 Super!', '💯 Excellent!'],
+                    incorrect: ['🤔 Think again!', '💪 You can do it!', '🎯 Try once more!', '⭐ Keep trying!', '🧠 Use your brain!', '💡 Think it through!', '🔄 Give it another try!', '🌟 Don\'t give up!']
+                };
+
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.generateNewProblem();
+                this.updateProgressDisplay();
+                console.log('MathKid initialized for iPad');
+            }
+
+            setupEventListeners() {
+                // Enhanced touch event handling for iOS
+                document.querySelectorAll('.number-btn').forEach(btn => {
+                    // Multiple event types for better iOS compatibility
+                    btn.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: true });
+                    btn.addEventListener('touchend', this.handleNumberPadTouch.bind(this), { passive: false });
+                    btn.addEventListener('click', this.handleNumberPadClick.bind(this), { passive: false });
+                });
+
+                // Action buttons
+                document.getElementById('newProblemBtn').addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.generateNewProblem();
+                }, { passive: false });
+
+                document.getElementById('resetProgressBtn').addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.resetProgress();
+                }, { passive: false });
+
+                // Settings
+                document.getElementById('settingsBtn').addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.openSettings();
+                }, { passive: false });
+
+                document.getElementById('cancelBtn').addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.closeSettings();
+                }, { passive: false });
+
+                document.getElementById('saveBtn').addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.saveSettings();
+                }, { passive: false });
+
+                // Settings range inputs
+                document.getElementById('minNumber').addEventListener('input', (e) => {
+                    document.getElementById('minValue').textContent = e.target.value;
+                    const maxInput = document.getElementById('maxNumber');
+                    if (parseInt(maxInput.value) <= parseInt(e.target.value)) {
+                        maxInput.value = parseInt(e.target.value) + 1;
+                        document.getElementById('maxValue').textContent = maxInput.value;
+                    }
+                });
+
+                document.getElementById('maxNumber').addEventListener('input', (e) => {
+                    document.getElementById('maxValue').textContent = e.target.value;
+                });
+
+                // Prevent default touch behaviors
+                document.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                }, { passive: false });
+
+                // Visual feedback
+                console.log('Event listeners set up for iPad');
+            }
+
+            handleTouchStart(e) {
+                e.target.style.opacity = '0.7';
+            }
+
+            handleNumberPadTouch(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const btn = e.target;
+                btn.style.opacity = '1';
+
+                const number = btn.dataset.number;
+                const action = btn.dataset.action;
+
+                if (number !== undefined) {
+                    this.addDigit(number);
+                } else if (action === 'clear') {
+                    this.clearAnswer();
+                } else if (action === 'submit') {
+                    this.submitAnswer();
+                }
+            }
+
+            handleNumberPadClick(e) {
+                // Fallback for click events
+                e.preventDefault();
+                const btn = e.target;
+                const number = btn.dataset.number;
+                const action = btn.dataset.action;
+
+                if (number !== undefined) {
+                    this.addDigit(number);
+                } else if (action === 'clear') {
+                    this.clearAnswer();
+                } else if (action === 'submit') {
+                    this.submitAnswer();
+                }
+            }
+
+            addDigit(digit) {
+                if (this.userAnswer.length < 4) {
+                    this.userAnswer += digit;
+                    this.updateAnswerDisplay();
+                    console.log('Added digit:', digit);
+                }
+            }
+
+            clearAnswer() {
+                this.userAnswer = '';
+                this.updateAnswerDisplay();
+                this.clearFeedback();
+                console.log('Answer cleared');
+            }
+
+            updateAnswerDisplay() {
+                document.getElementById('userAnswer').textContent = this.userAnswer || '?';
+            }
+
+            submitAnswer() {
+                if (!this.userAnswer) return;
+
+                const userNum = parseInt(this.userAnswer);
+                const correct = userNum === this.currentProblem.answer;
+
+                this.stats.total++;
+
+                if (correct) {
+                    this.stats.correct++;
+                    this.handleCorrectAnswer();
+                } else {
+                    this.handleIncorrectAnswer();
+                }
+
+                this.saveStats();
+                this.updateProgressDisplay();
+                console.log('Answer submitted:', this.userAnswer, 'Correct:', correct);
+            }
+
+            handleCorrectAnswer() {
+                const message = this.encouragementMessages.correct[
+                    Math.floor(Math.random() * this.encouragementMessages.correct.length)
+                ];
+                this.showFeedback(message, 'correct');
+
+                setTimeout(() => {
+                    this.generateNewProblem();
+                }, 2000);
+            }
+
+            handleIncorrectAnswer() {
+                const message = this.encouragementMessages.incorrect[
+                    Math.floor(Math.random() * this.encouragementMessages.incorrect.length)
+                ];
+                this.showFeedback(message, 'incorrect');
+
+                setTimeout(() => {
+                    this.clearAnswer();
+                }, 3000);
+            }
+
+            showFeedback(message, type) {
+                const feedbackEl = document.getElementById('feedback');
+                feedbackEl.textContent = message;
+                feedbackEl.className = `feedback-message ${type}`;
+            }
+
+            clearFeedback() {
+                const feedbackEl = document.getElementById('feedback');
+                feedbackEl.className = 'feedback-message';
+                feedbackEl.textContent = '';
+            }
+
+            generateNewProblem() {
+                this.currentProblem = this.generateProblem();
+                this.displayProblem();
+                this.clearAnswer();
+                this.clearFeedback();
+                console.log('New problem:', this.currentProblem);
+            }
+
+            generateProblem() {
+                const { minNumber, maxNumber, operations } = this.settings;
+                const operation = operations[Math.floor(Math.random() * operations.length)];
+
+                let num1, num2, operator, answer;
+
+                switch (operation) {
+                    case 'addition':
+                        num1 = this.randomNumber(minNumber, maxNumber);
+                        num2 = this.randomNumber(minNumber, maxNumber);
+                        operator = '+';
+                        answer = num1 + num2;
+                        break;
+                    case 'subtraction':
+                        num1 = this.randomNumber(minNumber, maxNumber);
+                        num2 = this.randomNumber(minNumber, Math.min(num1, maxNumber));
+                        operator = '-';
+                        answer = num1 - num2;
+                        break;
+                    case 'multiplication':
+                        num1 = this.randomNumber(Math.max(minNumber, 1), Math.min(maxNumber, 12));
+                        num2 = this.randomNumber(Math.max(minNumber, 1), Math.min(maxNumber, 12));
+                        operator = '×';
+                        answer = num1 * num2;
+                        break;
+                    default:
+                        return this.generateProblem();
+                }
+
+                return { num1, num2, operator, answer };
+            }
+
+            randomNumber(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            displayProblem() {
+                if (!this.currentProblem) return;
+
+                document.getElementById('firstNumber').textContent = this.currentProblem.num1;
+                document.getElementById('operator').textContent = this.currentProblem.operator;
+                document.getElementById('secondNumber').textContent = this.currentProblem.num2;
+            }
+
+            updateProgressDisplay() {
+                const correctCountEl = document.getElementById('correctCount');
+                const oldCount = parseInt(correctCountEl.textContent) || 0;
+                const newCount = this.stats.correct;
+
+                // Update the count
+                correctCountEl.textContent = newCount;
+                document.getElementById('totalCount').textContent = this.stats.total;
+
+                // Animate if count increased
+                if (newCount > oldCount) {
+                    correctCountEl.classList.add('celebrating');
+                    setTimeout(() => {
+                        correctCountEl.classList.remove('celebrating');
+                    }, 500);
+                }
+
+                const progressPercent = this.stats.total > 0 ?
+                    (this.stats.correct / this.stats.total) * 100 : 0;
+                document.getElementById('progressFill').style.width = `${progressPercent}%`;
+            }
+
+            resetProgress() {
+                if (confirm('Reset all progress?')) {
+                    this.stats = { correct: 0, total: 0 };
+                    this.saveStats();
+                    this.updateProgressDisplay();
+                    this.generateNewProblem();
+                }
+            }
+
+            openSettings() {
+                // Update UI with current settings
+                document.getElementById('minNumber').value = this.settings.minNumber;
+                document.getElementById('maxNumber').value = this.settings.maxNumber;
+                document.getElementById('minValue').textContent = this.settings.minNumber;
+                document.getElementById('maxValue').textContent = this.settings.maxNumber;
+
+                document.getElementById('additionOp').checked = this.settings.operations.includes('addition');
+                document.getElementById('subtractionOp').checked = this.settings.operations.includes('subtraction');
+                document.getElementById('multiplicationOp').checked = this.settings.operations.includes('multiplication');
+
+                document.getElementById('settingsModal').style.display = 'flex';
+            }
+
+            closeSettings() {
+                document.getElementById('settingsModal').style.display = 'none';
+            }
+
+            saveSettings() {
+                const minNumber = parseInt(document.getElementById('minNumber').value);
+                const maxNumber = parseInt(document.getElementById('maxNumber').value);
+
+                const operations = [];
+                if (document.getElementById('additionOp').checked) operations.push('addition');
+                if (document.getElementById('subtractionOp').checked) operations.push('subtraction');
+                if (document.getElementById('multiplicationOp').checked) operations.push('multiplication');
+
+                if (operations.length === 0) {
+                    alert('Please select at least one operation!');
+                    return;
+                }
+
+                if (minNumber >= maxNumber) {
+                    alert('Maximum must be greater than minimum!');
+                    return;
+                }
+
+                this.settings = { minNumber, maxNumber, operations };
+                this.closeSettings();
+                this.generateNewProblem();
+
+                // Show success feedback
+                this.showFeedback('Settings saved! 🎯', 'correct');
+                setTimeout(() => this.clearFeedback(), 2000);
+            }
+
+            loadStats() {
+                try {
+                    const saved = localStorage.getItem('mathkid_stats_ios');
+                    return saved ? JSON.parse(saved) : { correct: 0, total: 0 };
+                } catch {
+                    return { correct: 0, total: 0 };
+                }
+            }
+
+            saveStats() {
+                try {
+                    localStorage.setItem('mathkid_stats_ios', JSON.stringify(this.stats));
+                } catch (e) {
+                    console.log('Could not save stats:', e);
+                }
+            }
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded, initializing MathKid for iPad...');
+            window.mathApp = new MathKidApp();
+        });
+
+        // Ensure the page doesn't scroll or zoom
+        document.addEventListener('gesturestart', e => e.preventDefault());
+        document.addEventListener('gesturechange', e => e.preventDefault());
+        document.addEventListener('gestureend', e => e.preventDefault());
+    </script>
+</body>
+</html>

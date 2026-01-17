@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathKid - Basic Functionality Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .pass { background: #d4edda; color: #155724; }
+        .fail { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #45a049; }
+    </style>
+</head>
+<body>
+    <h1>🧮 MathKid - Basic Functionality Test</h1>
+
+    <div class="test-section">
+        <h2>JavaScript Module Loading Test</h2>
+        <div id="moduleTest"></div>
+        <button onclick="testModules()">Test Module Loading</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Storage System Test</h2>
+        <div id="storageTest"></div>
+        <button onclick="testStorage()">Test Storage</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Math Engine Test</h2>
+        <div id="mathTest"></div>
+        <button onclick="testMathEngine()">Test Math Engine</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Problem Generation Test</h2>
+        <div id="problemTest"></div>
+        <button onclick="generateTestProblems()">Generate Sample Problems</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Settings Validation Test</h2>
+        <div id="settingsTest"></div>
+        <button onclick="testSettingsValidation()">Test Settings</button>
+    </div>
+
+    <!-- Load the JavaScript modules -->
+    <script src="js/storage.js"></script>
+    <script src="js/math-engine.js"></script>
+
+    <script>
+        function addResult(containerId, message, type = 'info') {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.textContent = message;
+            container.appendChild(div);
+        }
+
+        function clearResults(containerId) {
+            document.getElementById(containerId).innerHTML = '';
+        }
+
+        function testModules() {
+            clearResults('moduleTest');
+
+            try {
+                // Test if Storage module loaded
+                if (typeof window.Storage === 'object') {
+                    addResult('moduleTest', '✅ Storage module loaded successfully', 'pass');
+                } else {
+                    addResult('moduleTest', '❌ Storage module failed to load', 'fail');
+                }
+
+                // Test if MathEngine module loaded
+                if (typeof window.MathEngine === 'object') {
+                    addResult('moduleTest', '✅ MathEngine module loaded successfully', 'pass');
+                } else {
+                    addResult('moduleTest', '❌ MathEngine module failed to load', 'fail');
+                }
+
+                // Test localStorage availability
+                if (window.Storage && window.Storage.isStorageAvailable()) {
+                    addResult('moduleTest', '✅ localStorage is available', 'pass');
+                } else {
+                    addResult('moduleTest', '⚠️ localStorage is not available', 'fail');
+                }
+
+            } catch (error) {
+                addResult('moduleTest', `❌ Error testing modules: ${error.message}`, 'fail');
+            }
+        }
+
+        function testStorage() {
+            clearResults('storageTest');
+
+            try {
+                if (!window.Storage) {
+                    addResult('storageTest', '❌ Storage module not available', 'fail');
+                    return;
+                }
+
+                // Test basic storage operations
+                const testKey = 'test_key';
+                const testValue = { test: 'data', number: 42 };
+
+                // Test set
+                const setResult = window.Storage.set(testKey, testValue);
+                if (setResult) {
+                    addResult('storageTest', '✅ Storage set operation works', 'pass');
+                } else {
+                    addResult('storageTest', '❌ Storage set operation failed', 'fail');
+                }
+
+                // Test get
+                const getValue = window.Storage.get(testKey);
+                if (getValue && getValue.test === 'data' && getValue.number === 42) {
+                    addResult('storageTest', '✅ Storage get operation works', 'pass');
+                } else {
+                    addResult('storageTest', '❌ Storage get operation failed', 'fail');
+                }
+
+                // Test settings
+                const defaultSettings = window.Storage.getMathSettings();
+                addResult('storageTest', `✅ Default settings loaded: ${JSON.stringify(defaultSettings)}`, 'info');
+
+                // Clean up test data
+                window.Storage.remove(testKey);
+
+            } catch (error) {
+                addResult('storageTest', `❌ Storage test error: ${error.message}`, 'fail');
+            }
+        }
+
+        function testMathEngine() {
+            clearResults('mathTest');
+
+            try {
+                if (!window.MathEngine) {
+                    addResult('mathTest', '❌ MathEngine module not available', 'fail');
+                    return;
+                }
+
+                // Test basic problem generation
+                const problem = window.MathEngine.generateProblem();
+                if (problem && problem.num1 && problem.num2 && problem.operator && typeof problem.answer === 'number') {
+                    addResult('mathTest', '✅ Basic problem generation works', 'pass');
+                    addResult('mathTest', `Generated: ${problem.num1} ${problem.operator} ${problem.num2} = ${problem.answer}`, 'info');
+                } else {
+                    addResult('mathTest', '❌ Problem generation failed', 'fail');
+                }
+
+                // Test answer validation
+                if (problem) {
+                    const correctValidation = window.MathEngine.validateAnswer(problem, problem.answer);
+                    const incorrectValidation = window.MathEngine.validateAnswer(problem, problem.answer + 1);
+
+                    if (correctValidation === true && incorrectValidation === false) {
+                        addResult('mathTest', '✅ Answer validation works correctly', 'pass');
+                    } else {
+                        addResult('mathTest', '❌ Answer validation failed', 'fail');
+                    }
+                }
+
+                // Test settings
+                const currentSettings = window.MathEngine.getSettings();
+                addResult('mathTest', `Current settings: ${JSON.stringify(currentSettings)}`, 'info');
+
+            } catch (error) {
+                addResult('mathTest', `❌ MathEngine test error: ${error.message}`, 'fail');
+            }
+        }
+
+        function generateTestProblems() {
+            clearResults('problemTest');
+
+            try {
+                if (!window.MathEngine) {
+                    addResult('problemTest', '❌ MathEngine not available', 'fail');
+                    return;
+                }
+
+                // Generate problems with different operations
+                const operations = ['addition', 'subtraction'];
+
+                for (const operation of operations) {
+                    // Update settings for specific operation
+                    window.MathEngine.updateSettings({
+                        minNumber: 1,
+                        maxNumber: 10,
+                        operations: [operation],
+                        difficulty: 'easy'
+                    });
+
+                    // Generate 3 problems for each operation
+                    for (let i = 0; i < 3; i++) {
+                        const problem = window.MathEngine.generateProblem();
+                        if (problem) {
+                            addResult('problemTest',
+                                `${operation}: ${problem.num1} ${problem.operator} ${problem.num2} = ${problem.answer}`,
+                                'info'
+                            );
+                        }
+                    }
+                }
+
+                addResult('problemTest', '✅ Problem generation test completed', 'pass');
+
+            } catch (error) {
+                addResult('problemTest', `❌ Problem generation error: ${error.message}`, 'fail');
+            }
+        }
+
+        function testSettingsValidation() {
+            clearResults('settingsTest');
+
+            try {
+                if (!window.MathEngine) {
+                    addResult('settingsTest', '❌ MathEngine not available', 'fail');
+                    return;
+                }
+
+                // Test valid settings
+                const validSettings = {
+                    minNumber: 1,
+                    maxNumber: 10,
+                    operations: ['addition', 'subtraction'],
+                    sessionLength: null,
+                    difficulty: 'easy'
+                };
+
+                const validResult = window.MathEngine.validateSettings(validSettings);
+                if (validResult.valid) {
+                    addResult('settingsTest', '✅ Valid settings pass validation', 'pass');
+                } else {
+                    addResult('settingsTest', `❌ Valid settings failed: ${validResult.errors.join(', ')}`, 'fail');
+                }
+
+                // Test invalid settings
+                const invalidSettings = {
+                    minNumber: 10,
+                    maxNumber: 5, // max < min
+                    operations: [], // empty operations
+                    sessionLength: -1, // negative session length
+                    difficulty: 'invalid'
+                };
+
+                const invalidResult = window.MathEngine.validateSettings(invalidSettings);
+                if (!invalidResult.valid && invalidResult.errors.length > 0) {
+                    addResult('settingsTest', '✅ Invalid settings correctly rejected', 'pass');
+                    addResult('settingsTest', `Validation errors: ${invalidResult.errors.join(', ')}`, 'info');
+                } else {
+                    addResult('settingsTest', '❌ Invalid settings incorrectly accepted', 'fail');
+                }
+
+            } catch (error) {
+                addResult('settingsTest', `❌ Settings validation error: ${error.message}`, 'fail');
+            }
+        }
+
+        // Auto-run module test on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(testModules, 100);
+        });
+    </script>
+</body>
+</html>
