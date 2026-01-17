@@ -1,5 +1,13 @@
 /* MathKid Settings Page Styles */
 
+/* Ensure body can scroll on settings page (override main.css restrictions) */
+body {
+    overflow: auto !important;
+    height: auto !important;
+    /* iOS specific scrolling improvements */
+    -webkit-overflow-scrolling: touch;
+}
+
 /* Settings Container */
 .settings-container {
     display: flex;
@@ -9,6 +17,9 @@
     margin: 0 auto;
     padding: 20px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Ensure scrolling works on iOS */
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
 }
 
 /* Header */

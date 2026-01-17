@@ -6,7 +6,7 @@
 class SettingsManager {
     constructor() {
         this.currentSettings = {};
-        this.isModified = false;
+        this.autoSaveTimeout = null;
 
         this.init();
     }
@@ -53,14 +53,14 @@ class SettingsManager {
             input.addEventListener('change', () => {
                 this.handleOperationChange();
                 this.generatePreviewProblems();
-                this.markModified();
+                this.autoSave();
             });
         });
 
         // Difficulty radio buttons
         document.querySelectorAll('input[name="difficulty"]').forEach(input => {
             input.addEventListener('change', () => {
-                this.markModified();
+                this.autoSave();
             });
         });
 
@@ -68,7 +68,7 @@ class SettingsManager {
         document.querySelectorAll('input[name="sessionType"]').forEach(input => {
             input.addEventListener('change', () => {
                 this.handleSessionTypeChange();
-                this.markModified();
+                this.autoSave();
             });
         });
 
@@ -94,17 +94,8 @@ class SettingsManager {
             this.handleSave();
         });
 
-        // Confirmation modal
+        // Confirmation modal (still needed for reset operations)
         this.setupConfirmationModal();
-
-        // Prevent accidental navigation away
-        window.addEventListener('beforeunload', (e) => {
-            if (this.isModified) {
-                e.preventDefault();
-                e.returnValue = '';
-                return '';
-            }
-        });
     }
 
     setupRangeControls() {
@@ -135,7 +126,7 @@ class SettingsManager {
             maxInput.min = numValue + 1;
 
             this.generatePreviewProblems();
-            this.markModified();
+            this.autoSave();
         };
 
         minRange.addEventListener('input', (e) => updateMinNumber(e.target.value));
@@ -153,7 +144,7 @@ class SettingsManager {
             maxDisplay.textContent = numValue;
 
             this.generatePreviewProblems();
-            this.markModified();
+            this.autoSave();
         };
 
         maxRange.addEventListener('input', (e) => updateMaxNumber(e.target.value));
@@ -170,7 +161,7 @@ class SettingsManager {
             lengthRange.value = numValue;
             lengthInput.value = numValue;
             lengthDisplay.textContent = numValue;
-            this.markModified();
+            this.autoSave();
         };
 
         lengthRange.addEventListener('input', (e) => updateSessionLength(e.target.value));
@@ -438,66 +429,55 @@ class SettingsManager {
         }, 3000);
     }
 
-    markModified() {
-        this.isModified = true;
-    }
-
-    handleBack() {
-        if (this.isModified) {
-            this.showConfirmation(
-                'Unsaved Changes',
-                'You have unsaved changes. Are you sure you want to go back?',
-                () => {
-                    window.location.href = 'index.html';
-                }
-            );
-        } else {
-            window.location.href = 'index.html';
+    autoSave() {
+        // Debounce auto-save to avoid excessive saves during rapid changes
+        if (this.autoSaveTimeout) {
+            clearTimeout(this.autoSaveTimeout);
         }
+
+        this.autoSaveTimeout = setTimeout(() => {
+            this.saveSettings();
+        }, 500); // Wait 500ms after last change before saving
     }
 
-    handleCancel() {
-        if (this.isModified) {
-            this.showConfirmation(
-                'Discard Changes',
-                'Are you sure you want to discard all changes?',
-                () => {
-                    this.loadCurrentSettings();
-                    this.updateUI();
-                    this.isModified = false;
-                    this.generatePreviewProblems();
-                }
-            );
-        }
-    }
-
-    handleSave() {
+    saveSettings() {
         const settings = this.collectFormData();
         const validation = this.validateSettings(settings);
 
         if (!validation.valid) {
-            alert('Please fix the following errors:\n\n' + validation.errors.join('\n'));
+            // Don't auto-save invalid settings, but don't alert either
+            console.warn('Settings validation failed:', validation.errors);
             return;
         }
 
-        // Save settings
+        // Save settings silently
         if (window.Storage) {
             const success = window.Storage.saveMathSettings(settings);
             if (success) {
                 this.currentSettings = settings;
-                this.isModified = false;
-                this.showSuccess('Settings saved successfully!');
+                this.showSuccess('Settings saved automatically!');
 
                 // Update math engine with new settings
                 if (window.MathEngine) {
                     window.MathEngine.updateSettings(settings);
                 }
-            } else {
-                alert('Error saving settings. Please try again.');
             }
-        } else {
-            alert('Cannot save settings - local storage not available');
         }
+    }
+
+    handleBack() {
+        // Auto-save handles saving, so just navigate back immediately
+        window.location.href = 'index.html';
+    }
+
+    handleCancel() {
+        // Auto-save handles saving, so just navigate back immediately
+        window.location.href = 'index.html';
+    }
+
+    handleSave() {
+        // Force immediate save when user explicitly clicks save
+        this.saveSettings();
     }
 
     handleResetAll() {
