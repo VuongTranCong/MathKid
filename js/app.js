@@ -344,12 +344,8 @@ class MathKidApp {
 
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('MathKid app starting...');
     window.mathKidApp = new MathKidApp();
 });
-
-// Quick test - remove this line after testing
-setTimeout(() => alert('JavaScript is working!'), 1000);
 
 // Add CSS animation keyframes via JavaScript
 const style = document.createElement('style');
