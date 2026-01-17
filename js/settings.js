@@ -455,7 +455,7 @@ class SettingsManager {
             const success = window.Storage.saveMathSettings(settings);
             if (success) {
                 this.currentSettings = settings;
-                this.showSuccess('Settings saved automatically!');
+                this.showSuccess('Settings saved!');
 
                 // Update math engine with new settings
                 if (window.MathEngine) {
@@ -490,7 +490,6 @@ class SettingsManager {
                     this.currentSettings = defaults;
                     this.updateUI();
                     this.generatePreviewProblems();
-                    this.isModified = false;
                     this.showSuccess('Settings reset to defaults');
                 }
             }
