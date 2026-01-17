@@ -58,7 +58,7 @@ class MathKidApp {
 
         // Register service worker if supported
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js')
+            navigator.serviceWorker.register('/MathKid/sw.js')
                 .then(reg => console.log('SW registered:', reg))
                 .catch(err => console.log('SW registration failed:', err));
         }
@@ -105,9 +105,18 @@ class MathKidApp {
             this.handleKeyboardInput(e);
         });
 
-        // Prevent zoom on double tap
-        document.addEventListener('touchend', (e) => {
-            e.preventDefault();
+        // Prevent zoom on double tap - only on specific elements, not globally
+        document.querySelectorAll('.number-btn, .action-btn').forEach(btn => {
+            btn.addEventListener('touchstart', (e) => {
+                // Add touch feedback
+                btn.style.transform = 'scale(0.95)';
+            });
+            btn.addEventListener('touchend', (e) => {
+                // Remove touch feedback
+                setTimeout(() => {
+                    btn.style.transform = '';
+                }, 150);
+            });
         });
     }
 
