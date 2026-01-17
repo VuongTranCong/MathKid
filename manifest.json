@@ -3,12 +3,12 @@
   "short_name": "MathKid",
   "description": "A fun and engaging offline math learning app for kids to practice addition, subtraction, and more!",
   "version": "1.0.0",
-  "start_url": "/",
+  "start_url": "/MathKid/",
   "display": "standalone",
   "orientation": "any",
   "theme_color": "#4CAF50",
   "background_color": "#667eea",
-  "scope": "/",
+  "scope": "/MathKid/",
   "lang": "en",
   "categories": ["education", "games", "kids"],
   "icons": [
@@ -76,7 +76,7 @@
       "name": "Start Math Practice",
       "short_name": "Practice",
       "description": "Jump straight into math practice",
-      "url": "/",
+      "url": "/MathKid/",
       "icons": [
         {
           "src": "icons/icon-96x96.png",
@@ -88,7 +88,7 @@
       "name": "Parent Settings",
       "short_name": "Settings",
       "description": "Access parent settings panel",
-      "url": "/settings.html",
+      "url": "/MathKid/settings.html",
       "icons": [
         {
           "src": "icons/icon-96x96.png",
@@ -110,7 +110,7 @@
   "protocol_handlers": [],
   "file_handlers": [],
   "share_target": {
-    "action": "/",
+    "action": "/MathKid/",
     "method": "GET",
     "enctype": "application/x-www-form-urlencoded",
     "params": {

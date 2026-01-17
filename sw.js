@@ -8,24 +8,24 @@ const CACHE_VERSION = 1;
 
 // Files to cache for offline functionality
 const CACHE_FILES = [
-    '/',
-    '/index.html',
-    '/settings.html',
-    '/css/main.css',
-    '/css/settings.css',
-    '/css/kids.css',
-    '/js/app.js',
-    '/js/math-engine.js',
-    '/js/storage.js',
-    '/js/settings.js',
-    '/manifest.json',
-    '/icons/icon-72x72.png',
-    '/icons/icon-96x96.png',
-    '/icons/icon-128x128.png',
-    '/icons/icon-144x144.png',
-    '/icons/icon-152x152.png',
-    '/icons/icon-192x192.png',
-    '/icons/icon-512x512.png'
+    '/MathKid/',
+    '/MathKid/index.html',
+    '/MathKid/settings.html',
+    '/MathKid/css/main.css',
+    '/MathKid/css/settings.css',
+    '/MathKid/css/kids.css',
+    '/MathKid/js/app.js',
+    '/MathKid/js/math-engine.js',
+    '/MathKid/js/storage.js',
+    '/MathKid/js/settings.js',
+    '/MathKid/manifest.json',
+    '/MathKid/icons/icon-72x72.png',
+    '/MathKid/icons/icon-96x96.png',
+    '/MathKid/icons/icon-128x128.png',
+    '/MathKid/icons/icon-144x144.png',
+    '/MathKid/icons/icon-152x152.png',
+    '/MathKid/icons/icon-192x192.png',
+    '/MathKid/icons/icon-512x512.png'
 ];
 
 // Install event - cache resources
