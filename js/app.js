@@ -84,6 +84,11 @@ class MathKidApp {
             this.openSettingsAccess();
         });
 
+        // Add touch-action to all interactive buttons to prevent zoom
+        document.querySelectorAll('.number-btn, .action-btn, #settingsBtn').forEach(btn => {
+            btn.style.touchAction = 'manipulation';
+        });
+
         // Settings access modal
         document.getElementById('accessSubmitBtn').addEventListener('click', () => {
             this.checkSettingsAccess();
@@ -105,19 +110,11 @@ class MathKidApp {
             this.handleKeyboardInput(e);
         });
 
-        // Prevent zoom on double tap - only on specific elements, not globally
-        document.querySelectorAll('.number-btn, .action-btn').forEach(btn => {
-            btn.addEventListener('touchstart', (e) => {
-                // Add touch feedback
-                btn.style.transform = 'scale(0.95)';
-            });
-            btn.addEventListener('touchend', (e) => {
-                // Remove touch feedback
-                setTimeout(() => {
-                    btn.style.transform = '';
-                }, 150);
-            });
-        });
+        // Prevent zoom on double tap for the app container only
+        const appContainer = document.querySelector('.app-container');
+        if (appContainer) {
+            appContainer.style.touchAction = 'manipulation';
+        }
     }
 
     handleNumberPadClick(e) {
