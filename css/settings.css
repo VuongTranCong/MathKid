@@ -46,6 +46,7 @@
     transition: all 0.3s ease;
     font-size: 0.9rem;
     backdrop-filter: blur(10px);
+    touch-action: manipulation;
 }
 
 .back-btn:hover,
@@ -472,6 +473,7 @@
     font-size: 0.9rem;
     flex: 1;
     min-width: 140px;
+    touch-action: manipulation;
 }
 
 .action-btn.secondary {
@@ -506,6 +508,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    touch-action: manipulation;
 }
 
 .footer-btn.primary {
@@ -545,6 +548,22 @@
 }
 
 /* Responsive Design */
+/* iPad and smaller tablets in landscape */
+@media (max-width: 1024px) {
+    .settings-container {
+        padding: 15px;
+    }
+
+    .settings-header {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .operations-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
     .settings-container {
         padding: 10px;
