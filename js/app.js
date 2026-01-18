@@ -272,8 +272,27 @@ class MathKidApp {
     }
 
     updateProgressDisplay() {
-        document.getElementById('correctCount').textContent = this.gameStats.correct;
+        const correctCountEl = document.getElementById('correctCount');
+        const previousCount = parseInt(correctCountEl.textContent) || 0;
+        const newCount = this.gameStats.correct;
+
+        correctCountEl.textContent = newCount;
         document.getElementById('totalCount').textContent = this.gameStats.total;
+
+        // Add celebration effect if score increased
+        if (newCount > previousCount) {
+            const scoreDisplay = document.querySelector('.score-display');
+
+            // Add celebrating animation to score display
+            scoreDisplay.classList.add('celebrating');
+            correctCountEl.classList.add('score-update');
+
+            // Remove classes after animation
+            setTimeout(() => {
+                scoreDisplay.classList.remove('celebrating');
+                correctCountEl.classList.remove('score-update');
+            }, 600);
+        }
 
         // Update progress bar
         const progressPercent = this.gameStats.total > 0 ?

@@ -203,11 +203,88 @@ body {
 
 .progress-info {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     margin-bottom: 15px;
     color: white;
     font-weight: 600;
     font-size: 1.1rem;
+}
+
+/* Score Display Section - Separate prominent counter */
+.score-display {
+    background: rgba(76, 175, 80, 0.1);
+    border: 3px solid #4CAF50;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.correct-score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.score-label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.9;
+}
+
+.score-number {
+    font-size: 4rem;
+    font-weight: 900;
+    color: #4CAF50;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+    line-height: 1;
+    transition: all 0.3s ease;
+}
+
+/* Special glow effect when score updates */
+.score-number.score-update {
+    color: #66BB6A !important;
+    text-shadow: 0 0 20px rgba(76, 175, 80, 0.8), 3px 3px 6px rgba(0, 0, 0, 0.4) !important;
+    transform: scale(1.1);
+}
+
+/* Pulsing border effect for score display */
+.score-display.celebrating {
+    border-color: #66BB6A;
+    box-shadow: 0 0 30px rgba(76, 175, 80, 0.5);
+    animation: pulse-border 0.6s ease;
+}
+
+@keyframes pulse-border {
+    0%, 100% {
+        border-color: #4CAF50;
+        box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+    }
+    50% {
+        border-color: #66BB6A;
+        box-shadow: 0 0 35px rgba(76, 175, 80, 0.7);
+    }
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 480px) {
+    .score-number {
+        font-size: 3rem;
+    }
+
+    .score-label {
+        font-size: 1rem;
+    }
+
+    .score-display {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
 }
 
 .progress-bar {

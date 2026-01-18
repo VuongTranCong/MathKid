@@ -406,6 +406,14 @@
     transition: all 0.3s ease;
 }
 
+/* Enhanced animation for the larger correct count */
+#correctCount.score-update {
+    animation: bounce 0.5s ease;
+    color: #4CAF50 !important;
+    font-weight: 900 !important; /* Maintain the boldest weight for animations */
+    transform: scale(1.15); /* Add a larger scale effect for the bigger display */
+}
+
 .score-update {
     animation: bounce 0.5s ease;
     color: #4CAF50 !important;
