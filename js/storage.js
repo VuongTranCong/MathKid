@@ -17,8 +17,8 @@ window.Storage = (function() {
 
     // Default data structures
     const DEFAULT_SETTINGS = {
-        minNumber: 1,
-        maxNumber: 10,
+        minNumber: 20,
+        maxNumber: 40,
         operations: ['addition', 'subtraction'],
         sessionLength: null,
         difficulty: 'easy'

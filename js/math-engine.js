@@ -8,8 +8,8 @@ window.MathEngine = (function() {
 
     // Default settings
     let settings = {
-        minNumber: 1,
-        maxNumber: 10,
+        minNumber: 20,
+        maxNumber: 40,
         operations: ['addition', 'subtraction'], // 'addition', 'subtraction', 'mixed'
         sessionLength: null, // null for unlimited
         difficulty: 'easy' // 'easy', 'medium', 'hard'
@@ -296,8 +296,8 @@ window.MathEngine = (function() {
      */
     function resetSettings() {
         const defaultSettings = {
-            minNumber: 1,
-            maxNumber: 10,
+            minNumber: 20,
+            maxNumber: 40,
             operations: ['addition', 'subtraction'],
             sessionLength: null,
             difficulty: 'easy'

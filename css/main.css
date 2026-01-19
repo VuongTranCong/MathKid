@@ -11,16 +11,19 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
+    /* Allow scrolling when content exceeds viewport */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 .app-container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100vh;
     max-width: 1024px; /* iPad max width */
     margin: 0 auto;
     padding: 20px;
-    overflow: hidden; /* Prevent scrolling for full-screen game feel */
+    /* Allow scrolling when content exceeds viewport */
 }
 
 /* Header Styles */
@@ -271,6 +274,32 @@ body {
     }
 }
 
+/* iPad Portrait Mode - Ensure content fits and scrolls when needed */
+@media (max-width: 1024px) and (orientation: portrait) {
+    .app-container {
+        padding: 15px;
+        /* Ensure there's enough space at bottom for scrolling */
+        padding-bottom: 30px;
+    }
+
+    .score-display {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .score-number {
+        font-size: 3.5rem;
+    }
+
+    .action-buttons {
+        /* Ensure buttons are always accessible */
+        position: relative;
+        z-index: 10;
+        margin-top: 20px;
+        padding-bottom: 20px;
+    }
+}
+
 /* Responsive design for smaller screens */
 @media (max-width: 480px) {
     .score-number {
@@ -284,6 +313,10 @@ body {
     .score-display {
         padding: 15px;
         margin-bottom: 15px;
+    }
+
+    .app-container {
+        padding-bottom: 30px;
     }
 }
 

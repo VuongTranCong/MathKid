@@ -25,8 +25,8 @@ class SettingsManager {
         } else {
             // Fallback defaults if storage not available
             this.currentSettings = {
-                minNumber: 1,
-                maxNumber: 10,
+                minNumber: 20,
+                maxNumber: 40,
                 operations: ['addition', 'subtraction'],
                 sessionLength: null,
                 difficulty: 'easy'
@@ -255,8 +255,8 @@ class SettingsManager {
     }
 
     generatePreviewProblems() {
-        const minNum = parseInt(document.getElementById('minNumber').value) || 1;
-        const maxNum = parseInt(document.getElementById('maxNumber').value) || 10;
+        const minNum = parseInt(document.getElementById('minNumber').value) || 20;
+        const maxNum = parseInt(document.getElementById('maxNumber').value) || 40;
         const checkedOps = Array.from(document.querySelectorAll('input[name="operations"]:checked'))
             .map(input => input.value);
 
